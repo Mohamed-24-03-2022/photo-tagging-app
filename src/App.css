@@ -1,38 +1,53 @@
-.App {
-  text-align: center;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500&family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
+:root {
+  --menuX: 0px;
+  --menuY: 0px;
+  --cursorX: 0px;
+  --cursorY: 0px;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+nav {
+  background: #0f2027; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  box-shadow: rgba(0, 0, 0, 0.437) 0px 5px 15px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.main {
+  background-image: radial-gradient(
+    circle farthest-corner at 10% 20%,
+    rgba(234, 249, 249, 0.67) 0.1%,
+    rgba(239, 249, 251, 0.63) 90.1%
+  );
+  box-shadow: rgba(0, 0, 0, 0.229) 0px 5px 15px inset;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.menu-position {
+  top: var(--menuY);
+  left: var(--menuX);
 }
+.circular-cursor {
+  background-color: transparent;
+  border:2px dashed rgb(255, 255, 255);    
+  /* text-shadow: rgba(0, 0, 0, 0.229) 0px 5px 15px; */
+  box-shadow: rgba(255, 255, 255, 0.982) 0px 0px 20px;
+  transition:all 50ms ease;
 
-.App-link {
-  color: #61dafb;
+  height:35px;
+  width:35px;
+  border-radius:100%;
+  position: absolute;
+  top: var(--cursorY);
+  left: var(--cursorX);
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.disable-cursor{
+  cursor: none;
 }
