@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -11,6 +13,7 @@ module.exports = {
       '2xl': '1440px',
     },
     colors: {
+      ...colors,
       blue: '#1fb6ff',
       purple: '#7e5bef',
       pink: '#ff49db',
