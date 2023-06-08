@@ -1,18 +1,67 @@
 import './App.css';
 import mainImg from './assets/raidthree.png';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DropdownMenu from './components/DropdownMenu';
 import WhatToFindMenu from './components/WhatToFindMenu';
+import ValidationMessage from './components/ValidationMessage';
+import LeaderBoard from './components/LeaderBoard';
+import camelize from './camelize';
 
 function App() {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const clickCoordinatesRef = useRef({})
+  const [didUserGetItRightForParent, setDidUserGetItRightForParent] =
+    useState(null);
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [characters, setCharacters] = useState([
+    { name: 'astroBoy', isClicked: false },
+    { name: 'owl', isClicked: false },
+    { name: 'alpha', isClicked: false },
+    { name: 'billAndTed', isClicked: false },
+    { name: 'babyYoda', isClicked: false },
+  ]);
+  const [time, setTime] = useState({ hr: 0, min: 0, sec: 0 });
+
+  const clickCoordinatesRef = useRef({});
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((prevTime) => {
+        const newSec = prevTime.sec + 1;
+        const newMin = prevTime.min + Math.floor(newSec / 60);
+        const newHr = prevTime.hr + Math.floor(newMin / 60);
+
+        return {
+          hr: newHr,
+          min: newMin % 60,
+          sec: newSec % 60,
+        };
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDidUserGetItRightForParent(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [didUserGetItRightForParent]);
 
   const setXYClass = (x, y, target) => {
     let r = document.querySelector(':root');
     if (target === 'menu') {
       x += 40;
+    }
+    if (target === 'validationMsg') {
+      r.style.setProperty(`--${target}Y`, `${y}px`);
+      return;
     }
     r.style.setProperty(`--${target}X`, `${x}px`);
     r.style.setProperty(`--${target}Y`, `${y}px`);
@@ -31,18 +80,22 @@ function App() {
   const handleCLick = async (e) => {
     setXYClass(e.pageX, e.pageY, 'menu');
     setIsVisible(!isVisible);
-    clickCoordinatesRef.current = findXYCoordinates(e)
+    clickCoordinatesRef.current = findXYCoordinates(e);
   };
 
-  const handleMouseIn = (e) => {
+  const handleMouseIn = () => {
     setIsHovered(true);
   };
   const handleMouseMove = (e) => {
     setXYClass(e.pageX, e.pageY, 'cursor');
   };
-  const handleMouseOut = (e) => {
+  const handleMouseOut = () => {
     setIsHovered(false);
   };
+
+  window.addEventListener('scroll', (e) => {
+    setXYClass(null, -window.scrollY + 15, 'validationMsg');
+  });
 
   return (
     <>
@@ -53,14 +106,16 @@ function App() {
         <div className="side-bar w-[230px]">
           <div className="settings space-y-4 py-4 text-center">
             <div className="time-stamp">
-              <p>23:41:28</p>
+              <p>
+                {time.hr}:{time.min}:{time.sec}
+              </p>
             </div>
-            <div className="leader-board">
-              <p>Scoreboard</p>
+            <div className="leader-board-btn">
+              <button type="button">Scoreboard</button>
             </div>
           </div>
           <div className="what-to-find w-full self-start">
-            <WhatToFindMenu />
+            <WhatToFindMenu characters={characters} />
           </div>
         </div>
 
@@ -78,6 +133,12 @@ function App() {
             />
           </div>
         </div>
+
+        {didUserGetItRightForParent ? (
+          <ValidationMessage selectedCharacter={selectedCharacter} />
+        ) : (
+          ''
+        )}
       </div>
 
       {/* NOTE floating components */}
@@ -85,18 +146,13 @@ function App() {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
         clickCoordinatesRef={clickCoordinatesRef}
+        characters={characters}
+        setCharacters={setCharacters}
+        camelize={camelize}
+        setDidUserGetItRightForParent={setDidUserGetItRightForParent}
+        setSelectedCharacter={setSelectedCharacter}
       />
-
-      {/* 
-      <img src={mainImg} usemap="#image-map">
-      <map name="image-map">
-      <area target="" alt="" title="owl" href="" coords="29,103,61,182" shape="rect">
-      <area target="" alt="" title="baby-yoda" href="" coords="71,928,117,875" shape="rect">
-      <area target="" alt="" title="alpha" href="" coords="854,866,970,943" shape="poly">
-      <area target="" alt="" title="bill-and-ted" href="" coords="256,1475,94,1371" shape="rect">
-      <area target="" alt="" title="astroBoy" href="" coords="301,1292,276,1336" shape="rect">
-      </map> 
-      */}
+      {/* <LeaderBoard /> */}
     </>
   );
 }

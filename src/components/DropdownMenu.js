@@ -1,16 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { db } from '../firebaseInitializer';
-import {
-  getDoc,
-  doc,
-} from 'firebase/firestore';
-
-function camelize(str) {
-  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
-    if (+match === 0) return '';
-    return index === 0 ? match.toLowerCase() : match.toUpperCase();
-  });
-}
+import { getDoc, doc } from 'firebase/firestore';
+import CharacterBtn from './CharacterBtn';
 
 const getCharactersCoordinates = async () => [
   await getDoc(doc(db, 'charactersCoordinates', 'astroBoy')),
@@ -20,44 +11,69 @@ const getCharactersCoordinates = async () => [
   await getDoc(doc(db, 'charactersCoordinates', 'babyYoda')),
 ];
 
-const DropdownMenu = ({ isVisible, setIsVisible, clickCoordinatesRef }) => {
-  const characters = useRef({});
-
+const DropdownMenu = ({
+  isVisible,
+  setIsVisible,
+  clickCoordinatesRef,
+  characters,
+  setCharacters,
+  camelize,
+  setDidUserGetItRightForParent,
+  setSelectedCharacter,
+}) => {
   useEffect(() => {
     getCharactersCoordinates()
       .then((data) => {
-        characters.current = {
-          astroBoy: data[0],
-          owl: data[1],
-          alpha: data[2],
-          billAndTed: data[3],
-          babyYoda: data[4],
-        };
+        setCharacters([
+          { name: 'astroBoy', coord: data[0].data(), isClicked: false },
+          { name: 'owl', coord: data[1].data(), isClicked: false },
+          { name: 'alpha', coord: data[2].data(), isClicked: false },
+          { name: 'billAndTed', coord: data[3].data(), isClicked: false },
+          { name: 'babyYoda', coord: data[4].data(), isClicked: false },
+        ]);
       })
       .catch((err) => console.log(err));
   }, []);
 
-  const handleClick = async (e) => {
-    setIsVisible(!isVisible);
-    const selectedCharacter = camelize(e.target.textContent)
-      .replace('&', 'And')
-      .replace('5', '');
-    const { clickedX, clickedY } = clickCoordinatesRef.current;
-
-    // const { astroBoy, owl, alpha, billAndTed, babyYoda } = characters.current;
-    // console.log(clickedX, clickedY);
-
-    const checkClick = (character) => {
-      if (character.data().x1 <= clickedX && clickedX <= character.data().x2) {
-        if (character.data().y1 <= clickedY && clickedY <= character.data().y2) {
-          return true;
-        }
+  const indexOf = (characterName) => {
+    let targetIndex = -1;
+    for (let i = 0; i < characters.length; i++) {
+      if (characters[i].name === characterName) {
+        targetIndex = i;
+        break;
       }
-      return false;
-    };
+    }
+    return targetIndex;
+  };
 
-    const didUserGotItRight = checkClick(characters.current[selectedCharacter]);
-    console.log(didUserGotItRight);
+  const checkClick = (character) => {
+    const { clickedX, clickedY } = clickCoordinatesRef.current;
+    const { coord } = character;
+    if (coord.x1 <= clickedX && clickedX <= coord.x2) {
+      if (coord.y1 <= clickedY && clickedY <= coord.y2) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const handleClick = (e) => {
+    setIsVisible(!isVisible);
+    const selectedCharacter = camelize(e.target.textContent);
+    const didUserGotItRight = checkClick(
+      characters[indexOf(selectedCharacter)]
+    );
+    setSelectedCharacter(selectedCharacter);
+    setDidUserGetItRightForParent(didUserGotItRight);
+
+    if (didUserGotItRight) {
+      const newList = characters.map((character) =>
+        character.name === selectedCharacter
+          ? { ...character, isClicked: true }
+          : character
+      );
+      setCharacters(newList);
+    }
   };
 
   return (
@@ -68,41 +84,41 @@ const DropdownMenu = ({ isVisible, setIsVisible, clickCoordinatesRef }) => {
           }`}
       >
         <ul>
-          <button
-            onClick={handleClick}
-            type="button"
-            className="w-full rounded-l px-4 py-2 text-left text-gray-800 hover:bg-gray-200"
-          >
-            <li>Alpha 5</li>
-          </button>
-          <button
-            onClick={handleClick}
-            type="button"
-            className="w-full rounded-l px-4 py-2 text-left text-gray-800 hover:bg-gray-200"
-          >
-            <li>Astro Boy</li>
-          </button>
-          <button
-            onClick={handleClick}
-            type="button"
-            className="w-full rounded-l px-4 py-2 text-left text-gray-800 hover:bg-gray-200"
-          >
-            <li>Baby Yoda</li>
-          </button>
-          <button
-            onClick={handleClick}
-            type="button"
-            className="w-full rounded-l px-4 py-2 text-left text-gray-800 hover:bg-gray-200"
-          >
-            <li>Bill & Ted</li>
-          </button>
-          <button
-            onClick={handleClick}
-            type="button"
-            className="w-full rounded-l px-4 py-2 text-left text-gray-800 hover:bg-gray-200"
-          >
-            <li>Owl</li>
-          </button>
+          <CharacterBtn
+            characters={characters}
+            characterName={'Astro Boy'}
+            i={0}
+            img={null}
+            handleClick={handleClick}
+          />
+          <CharacterBtn
+            characters={characters}
+            characterName={'Owl'}
+            i={1}
+            img={null}
+            handleClick={handleClick}
+          />
+          <CharacterBtn
+            characters={characters}
+            characterName={'Alpha 5'}
+            i={2}
+            img={null}
+            handleClick={handleClick}
+          />
+          <CharacterBtn
+            characters={characters}
+            characterName={'Bill & Ted'}
+            i={3}
+            img={null}
+            handleClick={handleClick}
+          />
+          <CharacterBtn
+            characters={characters}
+            characterName={'Baby Yoda'}
+            i={4}
+            img={null}
+            handleClick={handleClick}
+          />
         </ul>
       </div>
       <div className="circular-cursor absolute"></div>
