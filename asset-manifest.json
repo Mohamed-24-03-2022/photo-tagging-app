@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/react-gh-pages/static/css/main.4af32edd.css",
-    "main.js": "/react-gh-pages/static/js/main.72317532.js",
-    "static/media/raidthree.png": "/react-gh-pages/static/media/raidthree.b1f216499bc5fdeb59cc.png",
-    "static/media/Astro.png": "/react-gh-pages/static/media/Astro.9af724be3eb916c9220a.png",
-    "static/media/Bill_and_Ted.jpg": "/react-gh-pages/static/media/Bill_and_Ted.18d1bb0089f9b7af1abe.jpg",
-    "static/media/Alpha_5.png": "/react-gh-pages/static/media/Alpha_5.cf1328e8441cbe82c805.png",
-    "static/media/Owl.jpg": "/react-gh-pages/static/media/Owl.3a61a0b3d7bca5cb3c8a.jpg",
-    "static/media/Baby_Yoda.jpg": "/react-gh-pages/static/media/Baby_Yoda.f81afd68be101cf68d10.jpg",
-    "index.html": "/react-gh-pages/index.html",
-    "main.4af32edd.css.map": "/react-gh-pages/static/css/main.4af32edd.css.map",
-    "main.72317532.js.map": "/react-gh-pages/static/js/main.72317532.js.map"
+    "main.css": "/photo-tagging-app/static/css/main.4af32edd.css",
+    "main.js": "/photo-tagging-app/static/js/main.ebed839c.js",
+    "static/media/raidthree.png": "/photo-tagging-app/static/media/raidthree.b1f216499bc5fdeb59cc.png",
+    "static/media/Astro.png": "/photo-tagging-app/static/media/Astro.9af724be3eb916c9220a.png",
+    "static/media/Bill_and_Ted.jpg": "/photo-tagging-app/static/media/Bill_and_Ted.18d1bb0089f9b7af1abe.jpg",
+    "static/media/Alpha_5.png": "/photo-tagging-app/static/media/Alpha_5.cf1328e8441cbe82c805.png",
+    "static/media/Owl.jpg": "/photo-tagging-app/static/media/Owl.3a61a0b3d7bca5cb3c8a.jpg",
+    "static/media/Baby_Yoda.jpg": "/photo-tagging-app/static/media/Baby_Yoda.f81afd68be101cf68d10.jpg",
+    "index.html": "/photo-tagging-app/index.html",
+    "main.4af32edd.css.map": "/photo-tagging-app/static/css/main.4af32edd.css.map",
+    "main.ebed839c.js.map": "/photo-tagging-app/static/js/main.ebed839c.js.map"
   },
   "entrypoints": [
     "static/css/main.4af32edd.css",
-    "static/js/main.72317532.js"
+    "static/js/main.ebed839c.js"
   ]
 }
