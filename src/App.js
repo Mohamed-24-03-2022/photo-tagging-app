@@ -77,7 +77,7 @@ function App() {
   const setXYClass = (x, y, target) => {
     let r = document.querySelector(':root');
     if (target === 'menu') {
-      if (window.scrollY > 800) {
+      if (window.scrollY > 750) {
         y -= 150;
       }
       x += 40;
