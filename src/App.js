@@ -28,11 +28,13 @@ function App() {
   const [isLeaderBoard, setIsLeaderBoard] = useState(false);
   const [isUserNameField, setIsUserNameField] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
-  // const [didUserFoundThemAll, setDidUserFoundThemAll] = useState(false);
 
   const clickCoordinatesRef = useRef({});
   const intervalRef = useRef(null);
+
   useEffect(() => {
+    if (isUserNameField) return;
+
     const interval = setInterval(() => {
       setTime((prevTime) => {
         const newSec = prevTime.sec + 1;
@@ -51,7 +53,7 @@ function App() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [isUserNameField]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {

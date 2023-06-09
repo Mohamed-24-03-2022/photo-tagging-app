@@ -7,7 +7,6 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { setDoc, doc } from 'firebase/firestore';
 import { db } from '../firebaseInitializer';
 
-
 const ColorButton = styled(Button)({
   padding: '10px 12px',
   color: '#000',
@@ -23,7 +22,7 @@ const UserNameField = ({
   isUserNameField,
   setIsUserNameField,
   setBodyEvents,
-  setCurrentUser
+  setCurrentUser,
 }) => {
   const closeUserNameField = () => {
     setCurrentUser('without name');
@@ -37,12 +36,16 @@ const UserNameField = ({
 
   const handleCLick = async (e) => {
     e.preventDefault();
-    const userNameInput = e.target.parentElement.children[0].children[1].children[0].value;
+    const userNameInput =
+      e.target.parentElement.children[0].children[1].children[0].value;
     if (!userNameInput) return;
     setCurrentUser(userNameInput);
     setIsUserNameField(false);
     setBodyEvents('all');
-    await setDoc(doc(db, 'users', userNameInput), { name: userNameInput, time: '' });
+    await setDoc(doc(db, 'users', userNameInput), {
+      name: userNameInput,
+      time: '',
+    });
   };
 
   return (
