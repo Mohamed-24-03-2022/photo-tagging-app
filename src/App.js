@@ -63,16 +63,25 @@ function App() {
     const didUserFoundThemAll = characters.every(
       (character) => character.isClicked === true
     );
-    // setDidUserFoundThemAll(didUserFoundThemAll);
+
+    let timeout2 = null;
     if (didUserFoundThemAll) {
       clearInterval(intervalRef.current);
       updateDoc(doc(db, 'users', currentUser), {
         time: time,
-      }).then((data) => null);
+      }).then(() => {
+        openLeaderBoard();
+      });
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
     }
 
     return () => {
       clearTimeout(timeout);
+      clearTimeout(timeout2);
     };
   }, [didUserGetItRightForParent]);
 

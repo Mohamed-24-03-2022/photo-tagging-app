@@ -38,7 +38,9 @@ const UserNameField = ({
     e.preventDefault();
     const userNameInput =
       e.target.parentElement.children[0].children[1].children[0].value;
+
     if (!userNameInput) return;
+
     setCurrentUser(userNameInput);
     setIsUserNameField(false);
     setBodyEvents('all');
