@@ -27,7 +27,7 @@ const CharacterBtn = ({ characters, characterName, i, img, handleClick }) => {
     >
       <li>{characterName} </li>
 
-      {img ? (
+      {img && !characters[i].isClicked ? (
         <>
           <MdOutlineOpenInNew className="text-lg" />
           <div

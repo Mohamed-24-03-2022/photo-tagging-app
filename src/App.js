@@ -6,7 +6,11 @@ import WhatToFindMenu from './components/WhatToFindMenu';
 import ValidationMessage from './components/ValidationMessage';
 import LeaderBoard from './components/LeaderBoard';
 import camelize from './camelize';
-
+import UserNameField from './components/UserNameField';
+import { updateDoc, doc } from 'firebase/firestore';
+import { db } from './firebaseInitializer';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
+import { MdOutlineScore } from 'react-icons/md';
 function App() {
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -21,9 +25,13 @@ function App() {
     { name: 'babyYoda', isClicked: false },
   ]);
   const [time, setTime] = useState({ hr: 0, min: 0, sec: 0 });
+  const [isLeaderBoard, setIsLeaderBoard] = useState(false);
+  const [isUserNameField, setIsUserNameField] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
+  // const [didUserFoundThemAll, setDidUserFoundThemAll] = useState(false);
 
   const clickCoordinatesRef = useRef({});
-
+  const intervalRef = useRef(null);
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prevTime) => {
@@ -38,6 +46,7 @@ function App() {
         };
       });
     }, 1000);
+    intervalRef.current = interval;
 
     return () => {
       clearInterval(interval);
@@ -49,6 +58,17 @@ function App() {
       setDidUserGetItRightForParent(false);
     }, 3000);
 
+    const didUserFoundThemAll = characters.every(
+      (character) => character.isClicked === true
+    );
+    // setDidUserFoundThemAll(didUserFoundThemAll);
+    if (didUserFoundThemAll) {
+      clearInterval(intervalRef.current);
+      updateDoc(doc(db, 'users', currentUser), {
+        time: time,
+      }).then((data) => null);
+    }
+
     return () => {
       clearTimeout(timeout);
     };
@@ -57,8 +77,12 @@ function App() {
   const setXYClass = (x, y, target) => {
     let r = document.querySelector(':root');
     if (target === 'menu') {
+      if (window.scrollY > 800) {
+        y -= 150;
+      }
       x += 40;
     }
+
     if (target === 'validationMsg') {
       r.style.setProperty(`--${target}Y`, `${y}px`);
       return;
@@ -97,6 +121,14 @@ function App() {
     setXYClass(null, -window.scrollY + 15, 'validationMsg');
   });
 
+  const setBodyEvents = (eventProp) => {
+    let r = document.querySelector(':root');
+    r.style.setProperty(`--bodyEvents`, eventProp);
+  };
+  const openLeaderBoard = () => {
+    setIsLeaderBoard(true);
+    setBodyEvents('none');
+  };
   return (
     <>
       <nav className="flex p-4 text-white">
@@ -104,14 +136,22 @@ function App() {
       </nav>
       <div className="content flex flex-wrap text-[#333]  xl:flex-nowrap">
         <div className="side-bar w-[230px]">
-          <div className="settings space-y-4 py-4 text-center">
-            <div className="time-stamp">
-              <p>
+          <div className="settings flex items-start space-x-6 p-4 text-center">
+            <div className="icons flex flex-col items-center justify-center space-y-2 font-bold">
+              <AvTimerIcon className="text-2xl text-[#333]" />
+              <MdOutlineScore className="text-2xl text-[#333]" />
+            </div>
+            <div className="leader-board-btn flex w-min flex-col items-center justify-start space-y-2 font-bold">
+              <p className="w-max self-start">
                 {time.hr}:{time.min}:{time.sec}
               </p>
-            </div>
-            <div className="leader-board-btn">
-              <button type="button">Scoreboard</button>
+              <button
+                type="button"
+                onClick={openLeaderBoard}
+                className="min-w-max font-bold"
+              >
+                Leader Board
+              </button>
             </div>
           </div>
           <div className="what-to-find w-full self-start">
@@ -152,7 +192,24 @@ function App() {
         setDidUserGetItRightForParent={setDidUserGetItRightForParent}
         setSelectedCharacter={setSelectedCharacter}
       />
-      {/* <LeaderBoard /> */}
+      {isLeaderBoard ? (
+        <LeaderBoard
+          setIsLeaderBoard={setIsLeaderBoard}
+          setBodyEvents={setBodyEvents}
+        />
+      ) : (
+        ''
+      )}
+      {isUserNameField ? (
+        <UserNameField
+          isUserNameField={isUserNameField}
+          setIsUserNameField={setIsUserNameField}
+          setBodyEvents={setBodyEvents}
+          setCurrentUser={setCurrentUser}
+        />
+      ) : (
+        ''
+      )}
     </>
   );
 }

@@ -18,13 +18,16 @@
   --cursorX: 0px;
   --cursorY: 0px;
   --validationMsgY: 15px;
+  --bodyEvents: all;
 }
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
+body {
+  pointer-events: var(--bodyEvents);
+}
 nav,
 .validation-message {
   background: #0f2027; /* fallback for old browsers */
@@ -48,10 +51,8 @@ nav,
 .circular-cursor {
   background-color: transparent;
   border: 2px dashed rgb(255, 255, 255);
-  /* text-shadow: rgba(0, 0, 0, 0.229) 0px 5px 15px; */
   box-shadow: rgba(255, 255, 255, 0.982) 0px 0px 20px;
   transition: all 50ms ease;
-
   height: 35px;
   width: 35px;
   border-radius: 100%;
@@ -71,4 +72,18 @@ nav,
 .validation-message {
   left: 10px;
   bottom: var(--validationMsgY);
+}
+.leader-board {
+  box-shadow: rgba(0, 0, 0, 0.595) 0px 0px 20000px 5000px;
+  left: calc(50% - 225px);
+  top: 100px;
+  pointer-events: all;
+}
+
+.user-name-field {
+  border-radius: 10px;
+  left: calc(50% - 300px);
+  top: calc(25%);
+  box-shadow: rgba(0, 0, 0, 0.595) 0px 0px 20000px 5000px;
+  pointer-events: all;
 }
